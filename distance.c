@@ -2,7 +2,7 @@
 
 /**************************************************************************************************
  NAME:       halos_void_dist
- FUNCTION:   this function calculates the comovil distance between a specified halo and a close
+ FUNCTION:   this function calculates the comoving distance between a specified halo and a close
 	     void
  INPUTS:     halo position, void discrete position.
  RETURN:     0
@@ -104,6 +104,7 @@ int distances( struct halo halos[],
 		if( void_matrix[nv].id_reg != 0 ){
 		    pass = 0;
 		    for( nnp=0;nnp<nn;nnp++ ){
+			//Verifying current void regions is different to previous ones
 			if( void_matrix[nv].id_reg == halos[nh].id_voids[nnp] ){
 			    pass = 1;
 			    break;}}
@@ -112,7 +113,10 @@ int distances( struct halo halos[],
 			distance = halos_void_dist( halos[nh].r, void_matrix[nv].id, p );
 			if( distance <= halos[nh].distance[nn] ){
 			    halos[nh].distance[nn] = distance;
-			    halos[nh].id_voids[nn] = void_matrix[nv].id_reg;}}}
+			    halos[nh].id_voids[nn] = void_matrix[nv].id_reg;
+			    halos[nh].i_void[X] = it;
+			    halos[nh].i_void[Y] = jt;
+			    halos[nh].i_void[Z] = kt;}}}
 		 }
 	    }
 

@@ -189,7 +189,8 @@ int data_out( struct halo halos[],
     file = fopen( filename, "w" );
     for( n=0;n<p[NDAT];n++ ){
 	for( i=0;i<p[NNEI];i++ )
-	    fprintf( file, "%1.6e\t%d\t", halos[n].distance[i], halos[n].id_voids[i] );
+	    fprintf( file, "%1.6e\t%d\t%d\t%d\t%d", halos[n].distance[i], halos[n].id_voids[i], 
+		     halos[n].i_void[X], halos[n].i_void[Y], halos[n].i_void[Z] );
 	fprintf( file, "\n" );
     }
     
