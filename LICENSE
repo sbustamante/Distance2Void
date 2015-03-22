@@ -290,7 +290,9 @@ to attach them to the start of each source file to most effectively
 convey the exclusion of warranty; and each file should have at least
 the "copyright" line and a pointer to where the full notice is found.
 
-    This code builds a catalog with distances to void regions, using a (BDM or FoF) catalog of dark halos and a matrix of void regions, constructed by Void-Finder code using a FoF-like scheme.
+    This code builds a catalog with distances to void regions, using a 
+    (BDM or FoF) catalog of dark halos and a matrix of void regions, 
+    constructed by a Void-Finder scheme.
     Copyright (C) 2013  Sebastian Bustamante
 
     This program is free software; you can redistribute it and/or modify
