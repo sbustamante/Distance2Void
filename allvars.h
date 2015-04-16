@@ -4,6 +4,7 @@
 //General Macros
 #define MAXHALOS	500000
 #define MAXCELLS	17000000
+#define MAXNEIGH	10
 
 #define NMAX1		1000
 
@@ -36,10 +37,13 @@ struct halo{
     //Cell occupied
     int i_cell[3];
     
+    //The nearest cell of the nearest void
+    int i_void[MAXNEIGH][3];
+    
     //Distance to the three closer voids
-    float distance[100];
-    //Id of clser voids
-    int id_voids[100];
+    float distance[MAXNEIGH];
+    //Id of closer voids
+    int id_voids[MAXNEIGH];
     };
     
 struct void_cell{

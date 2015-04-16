@@ -10,7 +10,7 @@ VOIDS_PATH="$HOME/Projects/CosmicData/BOLSHOI/$WEB_TYPE/256/voidsFAG/voids_01/vo
 
 #Running code in serial
 if [ $1 -eq 1 ]; then
-    make Halo_Distance
+    make CFLAGS='-g -I. -c -DPRINT' Halo_Distance
     time ./Halo_Distance.out $HALOS_PATH $VOIDS_PATH $OUTPUT
 #Running code in parallel
 elif [ $1 -eq 2 ]; then

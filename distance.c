@@ -8,27 +8,16 @@
  RETURN:     0
 **************************************************************************************************/
 float halos_void_dist( float rh[3],
-		     int iv[3],
-		     float p[] )
+		       int iv[3],
+		       float p[] )
 {
-    int i, ih;
-    int i_tot[2];
+    int i, i_t;
     float distance[3];
     
     for( i=0;i<3;i++ ){
-	//Cell occupied by the dark halo
-	ih = (int)rh[i]/p[LBOX];
-	//Discrete distance between the void cell and the halo
-	i_tot[0] = iv[i];
-	if( i_tot[0] >= ih )
-	    i_tot[1] = i_tot[0] + (int)p[NBOX];
-	else
-	    i_tot[1] = i_tot[0] - (int)p[NBOX];
-	//Periodic boundaries
-	if( abs(i_tot[0]-ih) <= abs(i_tot[1]-ih) )
-	    distance[i] = fabs( p[LBOX]*(i_tot[0]+0.5)/p[NBOX] - rh[i]);
-	else
-	    distance[i] = fabs( p[LBOX]*(i_tot[1]+0.5)/p[NBOX] - rh[i]);}
+	distance[i] = fabs( p[LBOX]*(iv[i]+0.5)/p[NBOX] - rh[i]);
+	if( distance[i] >= p[LBOX]/2.0 )
+	    distance[i] = p[LBOX] - distance[i];}
 	    
     return pow( distance[0]*distance[0] + distance[1]*distance[1] + distance[2]*distance[2], 0.5 );
 }
@@ -72,9 +61,11 @@ int distances( struct halo halos[],
     int pass;
     long long int nv;
 
-    
     //Sweeping halos of the general catalog
-    for( nh=0;nh<p[NDAT];nh++ )
+    for( nh=0;nh<p[NDAT];nh++ ){
+	#ifdef PRINT
+ 	if( nh%10000==0 ) printf("In halo %ld\n", nh);
+	#endif
 	//nn-esim closer neighbor
 	for( nn=0;nn<p[NNEI];nn++ ){
 	    //Initializing the current distance
@@ -90,13 +81,13 @@ int distances( struct halo halos[],
 		it = i + ic; jt = j + jc; kt = k + kc;
 		//Neighbor out of limits (Periodic boundary conditions) (X direction)
 		if( i+ic>=N )		it = i+ic-N;
-		if( i+ic<0 )		it = N-(i+ic);
+		if( i+ic<0 )		it = N+(i+ic);
 		//Neighbor out of limits (Periodic boundary conditions) (Y direction)
 		if( j+jc>=N )		jt = j+jc-N;
-		if( j+jc<0 )		jt = N-(j+jc);
+		if( j+jc<0 )		jt = N+(j+jc);
 		//Neighbor out of limits (Periodic boundary conditions) (Z direction)
 		if( k+kc>=N )		kt = k+kc-N;
-		if( k+kc<0 )		kt = N-(k+kc);
+		if( k+kc<0 )		kt = N+(k+kc);
 	
 		//Index of current void cell
 		nv = kt + N*(jt + N*it);
@@ -111,14 +102,15 @@ int distances( struct halo halos[],
 		    if( pass == 0 ){
 			//Distance to current void cell
 			distance = halos_void_dist( halos[nh].r, void_matrix[nv].id, p );
-			if( distance <= halos[nh].distance[nn] ){
+			if( distance < halos[nh].distance[nn] ){
 			    halos[nh].distance[nn] = distance;
 			    halos[nh].id_voids[nn] = void_matrix[nv].id_reg;
-			    halos[nh].i_void[X] = it;
-			    halos[nh].i_void[Y] = jt;
-			    halos[nh].i_void[Z] = kt;}}}
+			    halos[nh].i_void[nn][X] = it;
+			    halos[nh].i_void[nn][Y] = jt;
+			    halos[nh].i_void[nn][Z] = kt;}}}
 		 }
 	    }
+    }
 
     return 0;
 }

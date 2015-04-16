@@ -136,7 +136,7 @@ int data_in_halos( struct halo halos[],
 long long int data_in_voids( struct void_cell void_matrix[],
 			     char filename[], int N )
 {
-    int i=0,j=0,k=0;
+    int i=0,j=0,k=0,ic,jc,kc,it,jt,kt,Nneigh;
     long long int n=0, m=0;
     FILE *file;    
 
@@ -164,9 +164,8 @@ long long int data_in_voids( struct void_cell void_matrix[],
  	n = k + N*(j + N*i);
 	if( i == N )
 	    break;}
-	  
     fclose( file );
-
+	    
     printf( "  * The file '%s' has been loaded! %lld cells\n", filename, n );
     return n;
 }
@@ -189,8 +188,8 @@ int data_out( struct halo halos[],
     file = fopen( filename, "w" );
     for( n=0;n<p[NDAT];n++ ){
 	for( i=0;i<p[NNEI];i++ )
-	    fprintf( file, "%1.6e\t%d\t%d\t%d\t%d", halos[n].distance[i], halos[n].id_voids[i], 
-		     halos[n].i_void[X], halos[n].i_void[Y], halos[n].i_void[Z] );
+	    fprintf( file, "%1.6e\t%d\t%d\t%d\t%d\t", halos[n].distance[i], halos[n].id_voids[i], 
+		     halos[n].i_void[i][X], halos[n].i_void[i][Y], halos[n].i_void[i][Z] );
 	fprintf( file, "\n" );
     }
     
