@@ -90,7 +90,7 @@ int distances( struct halo halos[],
 		if( k+kc<0 )		kt = N+(k+kc);
 	
 		//Index of current void cell
-		nv = kt + N*(jt + N*it);
+		nv = it + N*(jt + N*kt);
 		//Distance between the current dark halo and the void cell
 		if( void_matrix[nv].id_reg != 0 ){
 		    pass = 0;

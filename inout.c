@@ -139,6 +139,8 @@ long long int data_in_voids( struct void_cell void_matrix[],
     int i=0,j=0,k=0,ic,jc,kc,it,jt,kt,Nneigh;
     long long int n=0, m=0;
     FILE *file;    
+    struct void_cell *void_matrix_tmp;
+    void_matrix_tmp = (struct void_cell *)calloc( MAXCELLS, sizeof( struct void_cell ) );
 
     //File Detection
     file = fopen( filename, "r" );
@@ -146,25 +148,19 @@ long long int data_in_voids( struct void_cell void_matrix[],
 	printf( "  * The file '%s' don't exist!\n", filename );}
     
     //Read data
-    for( m=0; m<N*N*N; m++ ){
-	fscanf( file,"%d", &void_matrix[n].id_reg);
+    for( m=0; m<N*N*N; m++ )
+	fscanf( file,"%d", &void_matrix_tmp[m].id_reg);
+    fclose( file );
+    
+    for( i=0; i<N; i++ )
+    for( j=0; j<N; j++ )
+    for( k=0; k<N; k++ ){
 	//Setting the matrix coordinates (axes)
 	void_matrix[n].id[X] = i;
 	void_matrix[n].id[Y] = j;
 	void_matrix[n].id[Z] = k;
-
-	k++;
-	if( k == N ){
-	    k = 0;
-	    j ++;}
-	if( j == N ){
-	    j = 0;
-	    i ++;}
-	//  z y x  !
- 	n = k + N*(j + N*i);
-	if( i == N )
-	    break;}
-    fclose( file );
+ 	n = i + N*(j + N*k);
+	void_matrix[n].id_reg = void_matrix_tmp[n].id_reg;}
 	    
     printf( "  * The file '%s' has been loaded! %lld cells\n", filename, n );
     return n;
